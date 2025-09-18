@@ -4,7 +4,9 @@ Welcome to the Low-Level Design repository. This repo hosts modular LLD implemen
 
 Table of Contents
 - logging-library – Async Logger LLD
-  - Overview and design: logging-library/readme.txt
+  - Overview and design: logging-library/README.md
+- parking-lot – Parking Lot LLD
+  - Overview and design: parking-lot/readme.md
 
 Quick Start
 - Java 17+ required
@@ -15,7 +17,9 @@ Quick Start
 
 Repository Layout
 - logging-library/  – Java logging library demonstrating async logging with a BlockingQueue and Executor-based workers
-  - readme.txt      – Detailed LLD, architecture, and usage
+  - README.md       – Detailed LLD, architecture, and usage
+- parking-lot/     – Parking Lot LLD with strategy-based pricing and payments
+  - README.md       – Design, architecture, and usage
 
 Notes
 - Each module maintains its own README with deeper details.
