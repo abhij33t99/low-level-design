@@ -1,0 +1,126 @@
+@startuml
+' Notification System - PlantUML Class Diagram
+' Generated to document the current implementation
+
+title Notification System - Class Diagram
+
+skinparam classAttributeIconSize 0
+skinparam packageStyle rect
+skinparam shadowing false
+skinparam linetype ortho
+
+package enums {
+  enum OrderEventType {
+    ORDERED
+    SHIPPED
+    DELIVERED
+  }
+  enum MemberType {
+    CUSTOMER
+    SELLER
+    DELIVERY
+  }
+  enum NotificationChannelType {
+    EMAIL
+    SMS
+  }
+}
+
+package model {
+  class Member {
+    +id: String
+    +type: enums.MemberType
+    +name: String
+  }
+
+  class Notification {
+    -timestamp: String
+    -orderId: String
+    -memberId: String
+    -message: String
+    -eventType: enums.OrderEventType
+    -channel: enums.NotificationChannelType
+    +sendMessage(): String
+    +getOrderId(): String
+    +getMemberId(): String
+    +getChannel(): enums.NotificationChannelType
+  }
+
+  class "Notification.Builder" as NotificationBuilder {
+    +setTimestamp(String): NotificationBuilder
+    +setOrderId(String): NotificationBuilder
+    +setEventType(enums.OrderEventType): NotificationBuilder
+    +setMemberId(String): NotificationBuilder
+    +setChannel(enums.NotificationChannelType): NotificationBuilder
+    +setMessage(String): NotificationBuilder
+    +build(): Notification
+  }
+
+  class Subscription {
+    +subscriptionId: String
+    +member: Member
+    +channels: List<strategy.NotificationChannel>
+    +addChannel(strategy.NotificationChannel)
+    +removeChannel(strategy.NotificationChannel)
+    +update(orderId: String, type: enums.OrderEventType, timestamp: java.time.LocalDateTime)
+  }
+}
+
+package strategy {
+  interface NotificationChannel {
+    +send(model.Notification)
+    +getType(): enums.NotificationChannelType
+  }
+  class EmailNotificationChannel implements NotificationChannel
+  class SMSNotificationChannel implements NotificationChannel
+}
+
+package factory {
+  class NotificationChannelFactory {
+    +getNotificationChannel(type: enums.NotificationChannelType): strategy.NotificationChannel
+  }
+  class NotificationMessageFactory {
+    +build(member: model.Member, type: enums.OrderEventType): String
+  }
+}
+
+package service {
+  class SubscriptionService {
+    -subscriptions: Map<String, Map<enums.OrderEventType, List<model.Subscription>>>
+    {static} +getInstance(): SubscriptionService
+    +createSubscription(orderId: String, member: model.Member, eventTypes: List<enums.OrderEventType>, channelTypes: List<enums.NotificationChannelType>)
+    +getSubscriptions(orderId: String, type: enums.OrderEventType): List<model.Subscription>
+    +unsubscribe(orderId: String, member: model.Member, type: enums.OrderEventType)
+    +editChannelInSubscription(orderId: String, member: model.Member, channelType: enums.NotificationChannelType, add: boolean)
+  }
+
+  class OrderEventService {
+    {static} +getInstance(): OrderEventService
+    +publishEvent(orderId: String, type: enums.OrderEventType)
+  }
+
+  class NotificationService {
+    -history: Map<String, List<model.Notification>>
+    {static} +getInstance(): NotificationService
+    +sendNotification(channel: strategy.NotificationChannel, notification: model.Notification)
+    +replayNotifications(orderId: String, memberId: String)
+  }
+}
+
+' Relationships
+model.Subscription --> model.Member
+model.Subscription --> strategy.NotificationChannel
+model.Subscription ..> factory.NotificationMessageFactory : uses
+model.Subscription ..> service.NotificationService : uses
+service.OrderEventService ..> service.SubscriptionService : uses
+service.OrderEventService --> model.Subscription : notifies
+factory.NotificationChannelFactory --> strategy.NotificationChannel : creates
+strategy.EmailNotificationChannel ..|> strategy.NotificationChannel
+strategy.SMSNotificationChannel ..|> strategy.NotificationChannel
+model.Notification --> enums.OrderEventType
+model.Notification --> enums.NotificationChannelType
+model.Member --> enums.MemberType
+service.NotificationService --> model.Notification
+service.NotificationService ..> factory.NotificationChannelFactory : get channel for replay
+
+@enduml
