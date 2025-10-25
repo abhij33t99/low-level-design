@@ -1,0 +1,33 @@
+# Library Management System - Functional Requirements
+
+## 1. User Management
+- R1: The system shall support two types of users: Librarian and Member.
+- R2: The system shall allow librarians to register new members.
+
+## 2. Book and Inventory Management
+- R3: The system shall allow librarians to add new books with details like title, author, subject, and publication date.
+- R4: Each physical copy of a book shall be a distinct item with a unique ID.
+- R5: The system shall track the status of each book item (e.g., AVAILABLE, BORROWED, RESERVED, LOST).
+
+## 3. Core Library Operations
+- R6: Members shall be able to search for books by title, author, subject, or publication date.
+- R7: A member shall be able to borrow a book item if it is available or reserved for them.
+- R8: The system shall allow a librarian to issue a book item to a member.
+- R9: The system shall allow a librarian to process the return of a book item from a member.
+
+## 4. Reservation and Hold System
+- R10: A member shall be able to reserve a book item. Only one reservation per book item is allowed at a time.
+- R11: If a book item is currently borrowed, a member can reserve it and be placed on a hold/waitlist.
+- R12: When a borrowed book item with a reservation is returned, its status shall change to RESERVED.
+- R13: The member who reserved the book shall be notified that it is now available for them to issue.
+
+## 5. Loan and Renewal Policies
+- R14: The system shall enforce a limit on the maximum number of books a member can borrow at one time.
+- R15: Each book loan shall have a defined due date (e.g., 15 days from issuance).
+- R16: A member shall be able to renew a borrowed book to extend the due date.
+- R17: The system shall enforce a limit on the number of times a book can be renewed.
+- R18: A book item cannot be renewed if another member has placed a reservation on it.
+
+## 6. Notifications and Tracking
+- R19: The system shall automatically notify members about overdue books.
+- R20: The system shall log all major transactions (e.g., BORROW, RETURN, RENEW, RESERVE).

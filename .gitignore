@@ -4,3 +4,5 @@
 *.iml
 /out/
 /*/.idea/
+trace-logs.txt
+logs.txt
